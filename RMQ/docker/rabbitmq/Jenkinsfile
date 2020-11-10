@@ -14,8 +14,8 @@ pipeline {
         stage("docker login") {
             steps {
                 echo "====================     docker login     ======================="
-                withCredentials([usernamePassword(credentialsId: 'jenkins-mhaz223-cred', usernameVariable: 'DOCKER_U', passwordVariable: 'DOCKER_P')]) {
-                    sh "docker login -u $DOCKER_U -p $DOCKER_P"
+                withCredentials([usernamePassword(credentialsId: 'jenkins-mhaz223-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "docker login -u $USERNAME -p $PASSWORD"
                 }
             }
         }
