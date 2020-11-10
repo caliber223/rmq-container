@@ -14,8 +14,8 @@ pipeline {
         stage("docker login") {
             steps {
                 echo "====================     docker login     ======================="
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-mhaz223', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh "docker login -u $USERNAME -p $PASSWORD"
+                withCredentials([usernamePassword(credentialsId: 'jenkins-mhaz223-cred', usernameVariable: 'DOCKER_U', passwordVariable: 'DOCKER_P')]) {
+                    sh "docker login -u $DOCKER_U -p $DOCKER_P"
                 }
             }
         }
@@ -23,14 +23,14 @@ pipeline {
             steps {
                 echo "==================== start building image ======================="
                 dir ('RMQ/docker/rabbitmq') {
-                    sh 'docker build -t mhaz223/vizoro-rmq:latest . '
+                    sh 'docker build -t mhaz223/container-rmq1:latest . '
                 }
             }
         }
         stage("docker push") {
             steps {
                 echo "==================== start pushing image  ======================="
-                sh 'docker push mhaz223/vizoro-rmq:latest'
+                sh 'docker push mhaz223/container-rmq1:latest'
             }
         }
     }
