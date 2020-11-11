@@ -38,7 +38,7 @@ pipeline {
                 sh 'docker push mhaz223/container-rmq1:latest'
             }
         }
-        stages("Deploy") {
+        stages {
             if (dockerEndpoints["${env.BRANCH_NAME}"]) {
                 docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
                     stage('Deploy') {
