@@ -45,7 +45,7 @@ pipeline {
         stage("Deploy"){
             steps {
                 echo "==================== start deploy ==============================="
-                docker.withServer('tcp://127.0.0.1:2376') {
+                withDockerServer('tcp://127.0.0.1:2376') {
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
                 } // end 'withServer'
