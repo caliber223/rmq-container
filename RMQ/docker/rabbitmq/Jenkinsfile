@@ -40,16 +40,13 @@ pipeline {
         }
         stage("Deploy"){
             steps {
-                if (dockerEndpoints["${env.BRANCH_NAME}"]) {
+                dockerEndpoints["${env.BRANCH_NAME}"]
                     docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
                         stage('Deploy') {
                             sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
                             sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
                         }
                     }
-                } else {
-                    echo 'Skipping deploy stage.'
-                }
             } 
         }
     }
