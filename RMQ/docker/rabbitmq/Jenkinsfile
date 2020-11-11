@@ -2,7 +2,7 @@
 // Build RMQ image
 
 def dockerEndpoints = [:]
-dockerEndpoints['main'] = 'http://127.0.0.1:2376'
+dockerEndpoints['main'] = 'tcp://127.0.0.1:2376'
 
 properties([disableConcurrentBuilds()])
 
@@ -40,8 +40,7 @@ pipeline {
         }
         stage("Deploy"){
             steps {
-                dockerEndpoints["${env.BRANCH_NAME}"]
-                    docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
+                    docker.withServer(dockerEndpoints["main"]) {
                         stage('Deploy') {
                             sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
                             sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
