@@ -40,17 +40,11 @@ pipeline {
         }
         stage("Deploy"){
             steps {
-                echo '----------------------- step 1 ----------------------'
-             /*   if (dockerEndpoints["main"]) {
-                    docker.withServer(dockerEndpoints["main"]) {
-                        stage('Deploy') {
-                            sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
-                            sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
-                        }
-                    } // end 'withServer'
-                } else {
-                    echo 'Skipping deploy stage.'
-                }*/
+                echo "==================== start deploy ==============================="
+                docker.withServer(dockerEndpoints["main"]) {
+                    sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
+                    sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
+                } // end 'withServer'
             } 
         }
     }
