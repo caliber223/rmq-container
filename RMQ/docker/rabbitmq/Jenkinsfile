@@ -40,8 +40,8 @@ pipeline {
             steps {
                 echo "==================== start pushing image  ======================="
                 sh 'docker push mhaz223/container-rmq1:latest'
-                def branchTag = sanitizeString(env.BRANCH_NAME)
             }
+            def branchTag = sanitizeString(env.BRANCH_NAME)
         }
         stage("Deploy"){
             steps {
