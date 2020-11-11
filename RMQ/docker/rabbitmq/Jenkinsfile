@@ -1,5 +1,9 @@
 #!groovy
 // Build RMQ image
+
+def dockerEndpoints = [:]
+dockerEndpoints['main'] = 'http://127.0.0.1:2376'
+
 properties([disableConcurrentBuilds()])
 
 pipeline {
@@ -17,6 +21,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-mhaz223', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh "docker login -u $USERNAME -p $PASSWORD"
                 }
+                sh 'env | sort'
             }
         }
         stage("Build Docker image") {
@@ -32,6 +37,16 @@ pipeline {
                 echo "==================== start pushing image  ======================="
                 sh 'docker push mhaz223/container-rmq1:latest'
             }
+        }
+        if (dockerEndpoints["${env.BRANCH_NAME}"]) {
+            docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
+                stage('Deploy') {
+                    sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
+                    sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
+                }
+            } // end 'withServer'
+        } else {
+            echo 'Skipping deploy stage.'
         }
     }
 }

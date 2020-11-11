@@ -33,7 +33,7 @@ try {
             sh 'env | sort'
         }
 
-        dir('docker/rabbitmq') {
+        dir('RMQ/docker/rabbitmq') {
             stage('Build') {
                 sh 'make docker'
             }
