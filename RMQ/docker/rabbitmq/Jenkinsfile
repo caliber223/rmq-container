@@ -19,7 +19,7 @@ pipeline {
         timestamps()
     }
     stages {
-        stage("docker login") {
+        stage("Docker login") {
             steps {
                 echo "====================     docker login     ======================="
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-mhaz223', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -45,11 +45,13 @@ pipeline {
         stage("Deploy"){
             steps {
                 echo "==================== start deploy ==============================="
-                withDockerServer('tcp://127.0.0.1:2376') {
+                def tratata = dockerEndpoints["${env.BRANCH_NAME}"]
+                docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
-                } // end 'withServer'
+                }
             } 
         }
     }
 }
+
