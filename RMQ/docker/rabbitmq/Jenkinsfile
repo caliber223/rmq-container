@@ -41,12 +41,11 @@ pipeline {
                 echo "==================== start pushing image  ======================="
                 sh 'docker push mhaz223/container-rmq1:latest'
             }
-            def branchTag = sanitizeString(env.BRANCH_NAME)
         }
         stage("Deploy"){
             steps {
                 echo "==================== start deploy ==============================="
-                docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
+                docker.withServer('tcp://127.0.0.1:2376') {
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml pull rabbitmq"
                     sh "ATR_RABBITMQ_TAG=${shortCommit} docker-compose --file=docker/compose-files/prod.yml up -d --no-deps --no-color rabbitmq"
                 } // end 'withServer'
