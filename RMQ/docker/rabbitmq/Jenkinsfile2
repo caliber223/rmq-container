@@ -18,11 +18,13 @@ try {
                 branches: scm.branches,
                 extensions: scm.extensions + [
                     [$class: 'CleanBeforeCheckout'],
-                    [$class: 'PathRestriction', excludedRegions: '', includedRegions: '^docker/rabbitmq/.*$']
+                    [$class: 'PathRestriction', excludedRegions: '', includedRegions: '^RMQ/docker/rabbitmq/.*$']
+ //                   [$class: 'PathRestriction', excludedRegions: '', includedRegions: '^docker/rabbitmq/.*$']
                 ],
                 submoduleCfg: [],
                 userRemoteConfigs: [
-                    [credentialsId: 'jenkins-open-sys-with-key', url: 'git@github.com:VirtualInstruments/atr-backend.git']
+                    [credentialsId: 'jenkins-mhaz223-cred', url: 'git@github.com:caliber223/rmq-container.git']
+ //                   [credentialsId: 'jenkins-open-sys-with-key', url: 'git@github.com:VirtualInstruments/atr-backend.git']
                 ]
             ])
 
@@ -43,7 +45,7 @@ try {
                 sh "make push TAG=${branchTag}"
             }
         } // end 'dir'
-
+/*
         if (dockerEndpoints["${env.BRANCH_NAME}"]) {
             docker.withServer(dockerEndpoints["${env.BRANCH_NAME}"]) {
                 stage('Deploy') {
@@ -53,7 +55,7 @@ try {
             } // end 'withServer'
         } else {
             echo 'Skipping deploy stage.'
-        }
+        }*/
     } // end node 'docker'
 } catch (e) {
     echo e.toString()
